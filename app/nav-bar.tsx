@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { CircleCheckIcon, CircleHelpIcon, CircleIcon, Rose } from "lucide-react"
+import { Rose } from "lucide-react"
 import { LuGithub } from "react-icons/lu"
 
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -12,20 +12,19 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle
+  NavigationMenuTrigger
 } from "@/components/ui/navigation-menu"
 
 const projects = [
   {
     title: "Loan Calculator",
-    href: "",
+    href: "/projects/loan-calculator",
     description:
       "Compute loan payments and amortization schedules with adjustable rates and terms.",
   },
   {
-    title: "Savings Simulator",
-    href: "",
+    title: "Investment Calculator",
+    href: "/projects/investment-calculator",
     description:
       "Model future value of savings under varying compounding and inflation scenarios.",
   },
@@ -77,10 +76,19 @@ const resources = [
 
 const dataSources = [
   {
-    title: "Human Mortality Database (HMD)",
-    href: "https://www.mortality.org",
-    description:
-      "Detailed mortality and population data across multiple countries."
+    title: "Human Mortality Database",
+    href: "https://www.mortality.org/",
+    description: "Provides detailed mortality and population data for countries around the world, maintained by the University of California, Berkeley, and the Max Planck Institute for Demographic Research."
+  },
+  {
+    title: "US Open Data Portal",
+    href: "https://data.gov/",
+    description: "The official open data portal of the United States government, offering datasets across domains such as health, environment, education, and public safety."
+  },
+  {
+    title: "CDC Mortality Data (NVSS)",
+    href: "https://www.cdc.gov/nchs/nvss/deaths.htm",
+    description: "Mortality statistics compiled by the National Vital Statistics System (NVSS) of the CDC, providing public health data on deaths, causes, and life expectancy in the United States."
   },
   {
     title: "Centers for Medicare & Medicaid Services (CMS) Data",
@@ -90,34 +98,32 @@ const dataSources = [
   },
   {
     title: "FEMA Open Data (OpenFEMA)",
-    href: "https://www.fema.gov/openfema-data-page",
-    description:
-      "Open U.S. disaster and insurance claim datasets."
+    href: "https://www.fema.gov/about/reports-and-data/openfema",
+    description: "Open U.S. disaster and insurance claim datasets."
   },
   {
     title: "FRED (Federal Reserve Economic Data)",
     href: "https://fred.stlouisfed.org/",
-    description:
-      "Comprehensive U.S. macroeconomic indicators such as interest rates, inflation, and employment."
+    description: "Comprehensive U.S. macroeconomic indicators such as interest rates, inflation, and employment."
   },
   {
     title: "World Bank Open Data",
     href: "https://data.worldbank.org/",
-    description:
-      "Global economic, demographic, and development statistics."
+    description: "Global economic, demographic, and development statistics."
   },
   {
     title: "Kaggle Datasets",
     href: "https://www.kaggle.com/datasets",
-    description:
-      "Diverse user-contributed datasets including insurance pricing, health claims, and risk modeling examples."
+    description: "Diverse user-contributed datasets including insurance pricing, health claims, and risk modeling examples."
   }
 ]
 
 export function NavBar() {
   return (
-    <nav className="w-[calc(100dvw-(--spacing(4)))] max-w-4xl p-3 mx-auto border-2 border-t-0 border-black/35 dark:border-white/35 rounded-b-lg flex justify-between items-center bg-black/30 dark:bg-white/30 backdrop-blur-lg">
-      <Rose className="w-8 h-8"/>
+    <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-[calc(100dvw-(--spacing(4)))] max-w-4xl p-3 border-2 border-t-0 border-black/35 dark:border-white/35 rounded-b-lg flex justify-between items-center bg-black/30 dark:bg-white/30 backdrop-blur-lg">
+      <Link href="/">
+        <Rose className="w-8 h-8"/>
+      </Link>
       <NavigationMenuDemo />
       <div className="flex items-center gap-x-1">
         <Button
