@@ -3,6 +3,7 @@
 import { ChangeEvent, useState } from "react"
 import { ChevronDownIcon, InfoIcon } from "lucide-react"
 
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -31,7 +32,9 @@ import {
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 
-type CompoundingFrequency = "annual" | "semiannual" | "quarterly" | "monthly" | "daily" | "continuous"
+import { CompoundingFrequency, Investment } from "./types"
+import { getEffectiveRate } from "./utils"
+
 const compoundingFrequencies: { frequency: CompoundingFrequency, description: string }[] = [
   {
     frequency: "annual",
@@ -59,7 +62,11 @@ const compoundingFrequencies: { frequency: CompoundingFrequency, description: st
   }
 ]
 
-export function InvestmentCalculator() {
+export function InvestmentCalculator({
+  onInvestmentChange
+}: {
+  onInvestmentChange: (investment: Investment) => void
+}) {
   const [initialPrincipal, setInitialPrincipal] = useState<string>("")
   const [initialPrincipalError, setInitialPrincipalError] = useState<null | string>(null)
   const [interestRate, setInterestRate] = useState<string>("")
@@ -117,6 +124,47 @@ export function InvestmentCalculator() {
     if (lengthOfInvestment !== "" && isNaN(Number(lengthOfInvestment))) {
       setLengthOfInvestmentError("Length of investment must be a valid number.")
     }
+  }
+
+  const formValid = (
+    initialPrincipal !== "" && !isNaN(Number(initialPrincipal))
+    && interestRate !== "" && !isNaN(Number(interestRate))
+    && lengthOfInvestment !== "" && !isNaN(Number(lengthOfInvestment))
+  )
+
+  const handleInvestmentChange = () => {
+    if (!formValid) {
+      return
+    }
+
+    const principal = Number(initialPrincipal)
+    const nominalRate = Number(interestRate)
+    const time = Number(lengthOfInvestment)
+
+    const effectiveRate = getEffectiveRate({
+      nominalRate,
+      frequency: compoundingFrequency
+    })
+
+    const investment: Investment = [{ year: 1, principal: principal, interest: 0 }]
+    let accumulatedPrincipal = principal
+    let accumulatedInterest = 0
+    let accumulatedAmount = principal
+
+    for (let i = 2; i <= time; i++) {
+      // no annuities, so the principal stays the same
+      const interest = accumulatedAmount * effectiveRate
+      accumulatedInterest += interest
+      accumulatedAmount += interest
+
+      investment.push({
+        year: i,
+        principal: accumulatedPrincipal,
+        interest: accumulatedInterest
+      })
+    }
+
+    onInvestmentChange(investment)
   }
 
   return (
@@ -231,6 +279,9 @@ export function InvestmentCalculator() {
               </InputGroupAddon>
             </InputGroup>
           </div>
+          <Button type="button" disabled={!formValid} className="ml-auto" onClick={handleInvestmentChange}>
+            Calculate
+          </Button>
         </CardContent>
       </Card>
     </div>

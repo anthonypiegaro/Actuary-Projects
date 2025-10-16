@@ -1,5 +1,5 @@
-import { InvestmentCalculator } from "./investment-calculator"
+import { Wrapper } from "./wrapper";
 
 export default function Page() {
-  return <InvestmentCalculator />
+  return <Wrapper />
 }
