@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 
 import { Investment } from "./types"
 import { InvestmentAreaChart } from "./area-chart"
+import { InvestmentBarChart } from "./bar-chart"
 
 type Chart = "area" | "bar" | "pie"
 const charts: Chart[] = ["area", "bar", "pie"]
@@ -41,6 +42,7 @@ export function InvestmentVisual({
       </div>
       {investment.length === 0 && <h2 className="text-4xl m-auto">Add an investment</h2>}
       {chart === "area" && <InvestmentAreaChart investment={investment} />}
+      {chart === "bar" && <InvestmentBarChart investment={investment} />}
     </Card>
   )
 }

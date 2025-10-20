@@ -1,8 +1,8 @@
 "use client"
 
 import { 
-  Area, 
-  AreaChart, 
+  Bar, 
+  BarChart, 
   CartesianGrid, 
   XAxis 
 } from "recharts"
@@ -18,7 +18,7 @@ import {
 
 import { Investment } from "./types"
 
-export function InvestmentAreaChart({
+export function InvestmentBarChart({
   investment
 }: {
   investment: Investment
@@ -50,7 +50,7 @@ export function InvestmentAreaChart({
         <QuickStat label={"Total"} value={chartData[chartData.length - 1].amount} />
       </div>
       <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
-        <AreaChart accessibilityLayer data={chartData}>
+        <BarChart accessibilityLayer data={chartData}>
           <defs>
             <linearGradient id="fillPrincipal" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="var(--color-principal)" stopOpacity={0.8} />
@@ -69,10 +69,9 @@ export function InvestmentAreaChart({
           />
           <ChartTooltip content={<ChartTooltipContent label="Value" />} />
           <ChartLegend content={<ChartLegendContent />} />
-          <Area dataKey="amount" stroke="var(--color-amount)" fillOpacity={1} fill="url(#fillAmount)" />
-          <Area dataKey="interest" fillOpacity={0} strokeOpacity={0} />
-          <Area dataKey="principal" stroke="var(--color-principal)" fillOpacity={1} fill="url(#fillPrincipal)" />
-        </AreaChart>
+          <Bar dataKey="principal" stackId="a" stroke="var(--color-principal)" fillOpacity={1} fill="url(#fillPrincipal)" />
+          <Bar dataKey="amount" stackId="a" stroke="var(--color-amount)" fillOpacity={1} fill="url(#fillAmount)" />
+        </BarChart>
       </ChartContainer>
     </>
   )
