@@ -138,7 +138,7 @@ export function InvestmentCalculator({
     }
 
     const principal = Number(initialPrincipal)
-    const nominalRate = Number(interestRate)
+    const nominalRate = Number(interestRate) / 100
     const time = Number(lengthOfInvestment)
 
     const effectiveRate = getEffectiveRate({
@@ -159,8 +159,8 @@ export function InvestmentCalculator({
 
       investment.push({
         year: i,
-        principal: accumulatedPrincipal,
-        interest: accumulatedInterest
+        principal: Number(accumulatedPrincipal.toFixed(2)),
+        interest: Number(accumulatedInterest.toFixed(2))
       })
     }
 
@@ -168,7 +168,7 @@ export function InvestmentCalculator({
   }
 
   return (
-    <div className="w-dvw h-dvh">
+    <div>
       <Card className="max-w-2xl mx-auto mt-30">
         <CardHeader>
           <CardTitle>Investment Calculator</CardTitle>

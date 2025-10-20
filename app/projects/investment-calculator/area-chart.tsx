@@ -1,8 +1,18 @@
 "use client"
 
-import { Area, AreaChart } from "recharts"
+import { 
+  Area, 
+  AreaChart, 
+  CartesianGrid, 
+  XAxis 
+} from "recharts"
 
-import { type ChartConfig, ChartContainer } from "@/components/ui/chart"
+import { 
+  type ChartConfig, 
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent
+} from "@/components/ui/chart"
 
 import { Investment } from "./types"
 
@@ -16,6 +26,8 @@ export function InvestmentAreaChart({
     amount: period.principal + period.interest
   }))
 
+  console.log(chartData)
+
   const chartConfig = {
     principal: {
       label: "Principal",
@@ -28,18 +40,25 @@ export function InvestmentAreaChart({
   } satisfies ChartConfig
 
   return (
-    <ChartContainer config={chartConfig} className="min-h-50 w-full">
+    <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
       <AreaChart accessibilityLayer data={chartData}>
-      <defs>
-        <linearGradient id="fillPrincipal" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="var(--color-principal)" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="var(--color-principal)" stopOpacity={0} />
-        </linearGradient>
-        <linearGradient id="fillAmount" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="5%" stopColor="var(--color-amount)" stopOpacity={0.8} />
-          <stop offset="95%" stopColor="var(--color-amount)" stopOpacity={0} />
-        </linearGradient>
-      </defs>
+        <defs>
+          <linearGradient id="fillPrincipal" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="var(--color-principal)" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="var(--color-principal)" stopOpacity={0} />
+          </linearGradient>
+          <linearGradient id="fillAmount" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="var(--color-amount)" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="var(--color-amount)" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+        <CartesianGrid vertical={false} />
+        <XAxis 
+          dataKey="year"
+          tickLine={false}
+          tickMargin={10}
+        />
+        <ChartTooltip content={<ChartTooltipContent label="Value" />} />
         <Area dataKey="principal" stroke="var(--color-principal)" fillOpacity={1} fill="url(#fillPrincipal)" />
         <Area dataKey="amount" stroke="var(--color-amount)" fillOpacity={1} fill="url(#fillAmount)" />
       </AreaChart>

@@ -32,5 +32,5 @@ export const getEffectiveRate = ({
       break
   }
 
-  return (1 + (nominalRate / periods)) ** periods
+  return (1 + (nominalRate / periods)) ** periods - 1
 }
