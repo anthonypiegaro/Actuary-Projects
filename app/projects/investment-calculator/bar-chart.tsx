@@ -67,7 +67,7 @@ export function InvestmentBarChart({
             tickLine={false}
             tickMargin={10}
           />
-          <ChartTooltip content={<ChartTooltipContent label="Value" />} />
+          <ChartTooltip content={<ChartTooltipContent hideLabel />} />
           <ChartLegend content={<ChartLegendContent />} />
           <Bar dataKey="principal" stackId="a" stroke="var(--color-principal)" fillOpacity={1} fill="url(#fillPrincipal)" />
           <Bar dataKey="amount" stackId="a" stroke="var(--color-amount)" fillOpacity={1} fill="url(#fillAmount)" />

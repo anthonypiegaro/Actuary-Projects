@@ -67,7 +67,7 @@ export function InvestmentAreaChart({
             tickLine={false}
             tickMargin={10}
           />
-          <ChartTooltip content={<ChartTooltipContent label="Value" />} />
+          <ChartTooltip content={<ChartTooltipContent hideLabel />} />
           <ChartLegend content={<ChartLegendContent />} />
           <Area dataKey="amount" stroke="var(--color-amount)" fillOpacity={1} fill="url(#fillAmount)" />
           <Area dataKey="interest" fillOpacity={0} strokeOpacity={0} />
