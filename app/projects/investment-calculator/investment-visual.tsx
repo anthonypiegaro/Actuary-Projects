@@ -20,14 +20,14 @@ export function InvestmentVisual({
 
   if (investment.length === 0) {
     return (
-      <Card className="max-w-4xl mx-auto mt-10 h-75">
+      <Card className="max-w-4xl mx-auto mt-10 h-75 max-sm:bg-transparent max-sm:border-transparent">
         {investment.length === 0 && <h2 className="text-4xl m-auto">Add an investment</h2>}
       </Card>
     )
   }
 
   return (
-    <Card className="max-w-4xl mx-auto mt-10">
+    <Card className="max-w-4xl mx-auto mt-10 px-1 lg:px-4 xl:px-8 max-sm:bg-transparent max-sm:border-transparent">
       <div className="flex border rounded-[18px] p-1 mx-auto">
         {charts.map(chartType => (
           <div

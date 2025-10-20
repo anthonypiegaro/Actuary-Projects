@@ -169,7 +169,7 @@ export function InvestmentCalculator({
 
   return (
     <div>
-      <Card className="max-w-2xl mx-auto mt-30">
+      <Card className="max-w-2xl mx-auto mt-30 max-sm:bg-transparent max-sm:border-transparent">
         <CardHeader>
           <CardTitle>Investment Calculator</CardTitle>
           <CardDescription>Estimate the value of your investment by adding your initial principal, interest rate, etc.</CardDescription>
