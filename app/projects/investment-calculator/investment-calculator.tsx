@@ -61,6 +61,20 @@ const compoundingFrequencies: { frequency: CompoundingFrequency, description: st
     description: "Interest is compounded continuously, using the natural exponential function.",
   }
 ]
+const annuityFrequencies: { frequency: AnnuityFrequency, description: string }[] = [
+  {
+    frequency: "annual",
+    description: "Payments or contributions made once per year (1 time per year)."
+  },
+  {
+    frequency: "monthly",
+    description:"Payments or contributions made every month (12 times per year)."
+  }
+]
+const annuityTimings: { timing: AnnuityTiming; description: string }[] = [
+  { timing: "immediate", description: "Payments occur at the end of each period (ordinary annuity)." },
+  { timing: "due", description: "Payments occur at the beginning of each period (annuity due)." }
+]
 
 export function InvestmentCalculator({
   onInvestmentChange
@@ -74,9 +88,10 @@ export function InvestmentCalculator({
   const [compoundingFrequency, setCompoundingFrequency] = useState<CompoundingFrequency>("annual")
   const [lengthOfInvestment, setLengthOfInvestment] = useState<string>("")
   const [lengthOfInvestmentError, setLengthOfInvestmentError] = useState<null | string>(null)
-  const [annuityPayment, setAnnuityPayment] = useState<null | string>(null)
-  const [annuityType, setAnnuityType] = useState<AnnuityTiming>("due")
-  const [annuityFrequency, setAnnuityFrequency] = useState<AnnuityFrequency>("yearly")
+  const [annuityPayment, setAnnuityPayment] = useState<string>("")
+  const [annuityPaymentError, setAnnuityPaymentError] = useState<null | string>(null)
+  const [annuityTiming, setAnnuityTiming] = useState<AnnuityTiming>("immediate")
+  const [annuityFrequency, setAnnuityFrequency] = useState<AnnuityFrequency>("annual")
   // add inflation
   // add real vs nominal growth
 
@@ -128,10 +143,27 @@ export function InvestmentCalculator({
     }
   }
 
+  const handleAnnuityPaymentInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+
+    if (annuityPayment === "" || !isNaN(Number(annuityPayment))) {
+      setAnnuityPaymentError(null)
+    }
+
+    setAnnuityPayment(value)
+  }
+
+  const handleAnnuityPaymentInputBlur = () => {
+    if (annuityPayment !== "" && isNaN(Number(annuityPayment))) {
+      setAnnuityPaymentError("Initial principal must be a valid number.")
+    }
+  }
+
   const formValid = (
     initialPrincipal !== "" && !isNaN(Number(initialPrincipal))
     && interestRate !== "" && !isNaN(Number(interestRate))
     && lengthOfInvestment !== "" && !isNaN(Number(lengthOfInvestment))
+    && annuityPayment === "" && !isNaN(Number(annuityPayment))
   )
 
   const handleInvestmentChange = () => {
@@ -278,6 +310,112 @@ export function InvestmentCalculator({
               />
               <InputGroupAddon align="inline-end">
                 <InputGroupText>years</InputGroupText>
+              </InputGroupAddon>
+            </InputGroup>
+          </div>
+          <div className="flex flex-col gap-y-2">
+            <Label>
+              Recurring Contributions
+              <HoverCard openDelay={100} closeDelay={150}>
+                <HoverCardTrigger>
+                  <InfoIcon className="h-3.5 w-3.5" />
+                </HoverCardTrigger>
+                <HoverCardContent
+                  side="right"
+                  align="start"
+                  className="w-64"
+                >
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-medium">Recurring Contributions (Anuity)</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Regular payments made into (or withdrawn from) an investment at equal
+                      time intervals. Common examples include monthly savings deposits or
+                      annual retirement contributions.
+                    </p>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+            </Label>
+            <InputGroup className="max-w-sm">
+              <InputGroupAddon>
+                <InputGroupText>$</InputGroupText>
+              </InputGroupAddon>
+              <InputGroupInput
+                aria-invalid={annuityPaymentError ? true : false}
+                placeholder="0.00" 
+                value={annuityPayment} 
+                onChange={handleAnnuityPaymentInputChange}
+                onBlur={handleAnnuityPaymentInputBlur}
+              />
+              <InputGroupAddon align="inline-end">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <InputGroupButton variant="ghost" className="!pr-1.5 text-xs">
+                      {annuityFrequency} <ChevronDownIcon className="size-3" />
+                    </InputGroupButton>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {annuityFrequencies.map(freq => (
+                      <HoverCard key={freq.frequency} openDelay={100} closeDelay={150}>
+                        <HoverCardTrigger asChild>
+                          <DropdownMenuItem
+                            className={cn(annuityFrequency === freq.frequency && "bg-accent")}
+                            onClick={() => setAnnuityFrequency(freq.frequency)}
+                          >
+                            {freq.frequency}
+                          </DropdownMenuItem>
+                        </HoverCardTrigger>
+                        <HoverCardContent
+                          side="right"
+                          align="start"
+                          className="w-64"
+                        >
+                          <div className="space-y-1">
+                            <h4 className="text-sm font-medium">{freq.frequency}</h4>
+                            <p className="text-sm text-muted-foreground">
+                              {freq.description}
+                            </p>
+                          </div>
+                        </HoverCardContent>
+                      </HoverCard>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </InputGroupAddon>
+              <InputGroupAddon align="inline-end">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <InputGroupButton variant="ghost" className="!pr-1.5 text-xs">
+                      {annuityTiming} <ChevronDownIcon className="size-3" />
+                    </InputGroupButton>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {annuityTimings.map(timing => (
+                      <HoverCard key={timing.timing} openDelay={100} closeDelay={150}>
+                        <HoverCardTrigger asChild>
+                          <DropdownMenuItem
+                            className={cn(annuityTiming === timing.timing && "bg-accent")}
+                            onClick={() => setAnnuityTiming(timing.timing)}
+                          >
+                            {timing.timing}
+                          </DropdownMenuItem>
+                        </HoverCardTrigger>
+                        <HoverCardContent
+                          side="right"
+                          align="start"
+                          className="w-64"
+                        >
+                          <div className="space-y-1">
+                            <h4 className="text-sm font-medium">{timing.timing}</h4>
+                            <p className="text-sm text-muted-foreground">
+                              {timing.description}
+                            </p>
+                          </div>
+                        </HoverCardContent>
+                      </HoverCard>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </InputGroupAddon>
             </InputGroup>
           </div>

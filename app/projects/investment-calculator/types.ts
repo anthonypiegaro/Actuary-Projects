@@ -10,4 +10,4 @@ export type CompoundingFrequency = "annual" | "semiannual" | "quarterly" | "mont
 
 export type AnnuityTiming = "immediate" | "due"
 
-export type AnnuityFrequency = "monthly" | "yearly"
+export type AnnuityFrequency = "annual" | "monthly"
