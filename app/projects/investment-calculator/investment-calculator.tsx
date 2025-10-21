@@ -32,7 +32,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 
-import { CompoundingFrequency, Investment } from "./types"
+import { AnnuityFrequency, AnnuityTiming, CompoundingFrequency, Investment } from "./types"
 import { getEffectiveRate } from "./utils"
 
 const compoundingFrequencies: { frequency: CompoundingFrequency, description: string }[] = [
@@ -74,7 +74,9 @@ export function InvestmentCalculator({
   const [compoundingFrequency, setCompoundingFrequency] = useState<CompoundingFrequency>("annual")
   const [lengthOfInvestment, setLengthOfInvestment] = useState<string>("")
   const [lengthOfInvestmentError, setLengthOfInvestmentError] = useState<null | string>(null)
-  // add annuities
+  const [annuityPayment, setAnnuityPayment] = useState<null | string>(null)
+  const [annuityType, setAnnuityType] = useState<AnnuityTiming>("due")
+  const [annuityFrequency, setAnnuityFrequency] = useState<AnnuityFrequency>("yearly")
   // add inflation
   // add real vs nominal growth
 

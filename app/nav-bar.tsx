@@ -120,11 +120,11 @@ const dataSources = [
 
 export function NavBar() {
   return (
-    <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-[calc(100dvw-(--spacing(4)))] max-w-4xl p-3 border-2 border-t-0 border-black/35 dark:border-white/35 rounded-b-lg flex justify-between items-center bg-black/30 dark:bg-white/30 backdrop-blur-lg">
+    <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-[calc(100dvw-(--spacing(4)))] max-w-4xl p-3 border-2 border-t-0 border-black/35 dark:border-white/35 rounded-b-lg flex justify-between items-center bg-black/30 dark:bg-white/30 backdrop-blur-lg z-[10000]">
       <Link href="/">
         <Rose className="w-8 h-8"/>
       </Link>
-      <NavigationMenuDemo />
+      <Menu />
       <div className="flex items-center gap-x-1">
         <Button
           size="icon"
@@ -142,7 +142,7 @@ export function NavBar() {
   )
 }
 
-function NavigationMenuDemo() {
+function Menu() {
   return (
     <NavigationMenu viewport={false}>
       <NavigationMenuList>
