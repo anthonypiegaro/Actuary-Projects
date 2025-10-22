@@ -33,7 +33,7 @@ import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 
 import { AnnuityFrequency, AnnuityTiming, CompoundingFrequency, Investment } from "./types"
-import { getEffectiveRate } from "./utils"
+import { getAnnuityPrincipalAndInterest, getEffectiveRate } from "./utils"
 
 const compoundingFrequencies: { frequency: CompoundingFrequency, description: string }[] = [
   {
@@ -163,7 +163,7 @@ export function InvestmentCalculator({
     initialPrincipal !== "" && !isNaN(Number(initialPrincipal))
     && interestRate !== "" && !isNaN(Number(interestRate))
     && lengthOfInvestment !== "" && !isNaN(Number(lengthOfInvestment))
-    && annuityPayment === "" && !isNaN(Number(annuityPayment))
+    && annuityPayment === "" || !isNaN(Number(annuityPayment))
   )
 
   const handleInvestmentChange = () => {
@@ -174,6 +174,7 @@ export function InvestmentCalculator({
     const principal = Number(initialPrincipal)
     const nominalRate = Number(interestRate) / 100
     const time = Number(lengthOfInvestment)
+    const recurringPayment = Number(annuityPayment)
 
     const effectiveRate = getEffectiveRate({
       nominalRate,
@@ -181,15 +182,22 @@ export function InvestmentCalculator({
     })
 
     const investment: Investment = [{ year: 1, principal: principal, interest: 0 }]
+    const { principal: annuityPrincipal, interest: annuityInterest } = getAnnuityPrincipalAndInterest({
+      payment: recurringPayment,
+      frequency: annuityFrequency,
+      timing: annuityTiming,
+      effectiveRate
+    })
     let accumulatedPrincipal = principal
     let accumulatedInterest = 0
     let accumulatedAmount = principal
 
     for (let i = 2; i <= time; i++) {
       // no annuities, so the principal stays the same
-      const interest = accumulatedAmount * effectiveRate
+      accumulatedPrincipal += annuityPrincipal
+      const interest = accumulatedAmount * effectiveRate + annuityInterest
       accumulatedInterest += interest
-      accumulatedAmount += interest
+      accumulatedAmount += interest + annuityPrincipal
 
       investment.push({
         year: i,

@@ -55,10 +55,10 @@ export function InvestmentPieChart({
               <stop offset="95%" stopColor="var(--color-interest)" stopOpacity={0.1} />
             </linearGradient>
           </defs>
-          <ChartTooltip
+          {/* <ChartTooltip
             cursor={false}
             content={<ChartTooltipContent hideLabel />}
-          />
+          /> */}
           <ChartLegend content={<ChartLegendContent />} />
           <Pie
                 data={chartData}
