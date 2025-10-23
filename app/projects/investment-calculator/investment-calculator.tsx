@@ -181,7 +181,7 @@ export function InvestmentCalculator({
       frequency: compoundingFrequency
     })
 
-    const investment: Investment = [{ year: 1, principal: principal, interest: 0 }]
+    const investment: Investment = [{ year: 0, principal: principal, interest: 0 }]
     const { principal: annuityPrincipal, interest: annuityInterest } = getAnnuityPrincipalAndInterest({
       payment: recurringPayment,
       frequency: annuityFrequency,
@@ -192,8 +192,7 @@ export function InvestmentCalculator({
     let accumulatedInterest = 0
     let accumulatedAmount = principal
 
-    for (let i = 2; i <= time; i++) {
-      // no annuities, so the principal stays the same
+    for (let i = 1; i <= time; i++) {
       accumulatedPrincipal += annuityPrincipal
       const interest = accumulatedAmount * effectiveRate + annuityInterest
       accumulatedInterest += interest
@@ -206,7 +205,7 @@ export function InvestmentCalculator({
       })
     }
 
-    onInvestmentChange(investment)
+    onInvestmentChange(investment.slice(1))
   }
 
   return (
