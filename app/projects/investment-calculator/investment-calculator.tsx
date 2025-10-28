@@ -288,7 +288,7 @@ export function InvestmentCalculator({
                         <HoverCardContent
                           side="right"
                           align="start"
-                          className="w-64"
+                          className="w-64 max-sm:hidden"
                         >
                           <div className="space-y-1">
                             <h4 className="text-sm font-medium">{freq.frequency}</h4>
@@ -375,7 +375,7 @@ export function InvestmentCalculator({
                         <HoverCardContent
                           side="right"
                           align="start"
-                          className="w-64"
+                          className="w-64 max-sm:hidden"
                         >
                           <div className="space-y-1">
                             <h4 className="text-sm font-medium">{freq.frequency}</h4>
@@ -410,7 +410,7 @@ export function InvestmentCalculator({
                         <HoverCardContent
                           side="right"
                           align="start"
-                          className="w-64"
+                          className="w-64 max-sm:hidden"
                         >
                           <div className="space-y-1">
                             <h4 className="text-sm font-medium">{timing.timing}</h4>
