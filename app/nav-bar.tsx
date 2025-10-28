@@ -1,10 +1,17 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
-import { Rose } from "lucide-react"
+import { Menu as MenuIcon, Rose } from "lucide-react"
 import { LuGithub } from "react-icons/lu"
 
 import { ThemeToggle } from "@/components/theme-toggle"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import {
   NavigationMenu,
@@ -14,6 +21,13 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger
 } from "@/components/ui/navigation-menu"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
 
 const projects = [
   {
@@ -119,6 +133,8 @@ const dataSources = [
 ]
 
 export function NavBar() {
+  const [sheetOpen, setSheetOpen] = useState(false)
+
   return (
     <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-[calc(100dvw-(--spacing(4)))] max-w-4xl p-3 border-2 border-t-0 border-black/35 dark:border-white/35 rounded-b-lg flex justify-between items-center bg-black/30 dark:bg-white/30 backdrop-blur-lg z-[10000]">
       <Link href="/">
@@ -126,6 +142,7 @@ export function NavBar() {
       </Link>
       <Menu />
       <div className="flex items-center gap-x-1">
+        <MobileMenu open={sheetOpen} onOpenChange={setSheetOpen}/>
         <Button
           size="icon"
           variant="ghost"
@@ -142,9 +159,82 @@ export function NavBar() {
   )
 }
 
+function MobileMenu({
+  open,
+  onOpenChange
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) {
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetTrigger className="md:hidden">
+        <MenuIcon />
+      </SheetTrigger>
+      <SheetContent className="z-[10001]">
+        <SheetHeader>
+          <SheetTitle><Rose className="w-8 h-8"/></SheetTitle>
+        </SheetHeader>
+        <div className="flex flex-col p-2 overflow-y-scroll">
+          <Accordion type="single" collapsible>
+            <AccordionItem value="projects">
+              <AccordionTrigger className="text-lg">Projects</AccordionTrigger>
+              <AccordionContent className="pl-2">
+                {projects.map(project => (
+                  <MobileListItem
+                    key={project.title} 
+                    title={project.title}
+                    href={project.href}
+                    close={() => onOpenChange(false)}
+                    className="mb-2"
+                  >
+                    {project.description}
+                  </MobileListItem>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="data">
+              <AccordionTrigger className="text-lg">Data</AccordionTrigger>
+              <AccordionContent className="pl-2">
+                {dataSources.map(dataSource => (
+                  <MobileListItem
+                    key={dataSource.title} 
+                    title={dataSource.title}
+                    href={dataSource.href}
+                    close={() => onOpenChange(false)}
+                    className="mb-2"
+                  >
+                    {dataSource.description}
+                  </MobileListItem>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="resources">
+              <AccordionTrigger className="text-lg">Resources</AccordionTrigger>
+              <AccordionContent className="pl-2">
+                {resources.map(resource => (
+                  <MobileListItem
+                    key={resource.title} 
+                    title={resource.title}
+                    href={resource.href}
+                    close={() => onOpenChange(false)}
+                    className="mb-2"
+                  >
+                    {resource.description}
+                  </MobileListItem>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </SheetContent>
+    </Sheet>
+  )
+}
+
 function Menu() {
   return (
-    <NavigationMenu viewport={false}>
+    <NavigationMenu viewport={false} className="max-sm:hidden">
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger className="text-md bg-transparent hover:bg-black/30 focus:bg-black/30 data-[state=open]:bg-black/20 data-[state=open]:hover:bg-black/20 data-[state=open]:focus:bg-black/20">
@@ -210,6 +300,7 @@ function Menu() {
     </NavigationMenu>
   )
 }
+
 function ListItem({
   title,
   children,
@@ -226,6 +317,25 @@ function ListItem({
           </p>
         </Link>
       </NavigationMenuLink>
+    </li>
+  )
+}
+
+function MobileListItem({
+  title,
+  children,
+  href,
+  close,
+  ...props
+}: React.ComponentPropsWithoutRef<"li"> & { href: string, close: () => void }) {
+  return (
+    <li {...props} onClick={close}>
+      <Link href={href}>
+        <div className="text-sm font-medium truncate">{title}</div>
+        <p className="text-[oklch(0.3_0_0)] dark:text-[oklch(0.7_0_255)] line-clamp-2 text-xs leading-snug">
+          {children}
+        </p>
+      </Link>
     </li>
   )
 }
