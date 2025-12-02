@@ -98,7 +98,7 @@ export function InvestmentCalculator({
   const handleInitialPrincipalInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
 
-    if (initialPrincipal === "" || !isNaN(Number(initialPrincipal))) {
+    if (value === "" || !isNaN(Number(value.replace(/,/g, "")))) {
       setInitialPrincipalError(null)
     }
 
@@ -106,7 +106,7 @@ export function InvestmentCalculator({
   }
 
   const handleInitialPrincipleInputBlur = () => {
-    if (initialPrincipal !== "" && isNaN(Number(initialPrincipal))) {
+    if (initialPrincipal !== "" && isNaN(Number(initialPrincipal.replace(/,/g, "")))) {
       setInitialPrincipalError("Initial principal must be a valid number.")
     }
   }
@@ -114,7 +114,7 @@ export function InvestmentCalculator({
   const handleInterestRateInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
 
-    if (interestRate === "" || !isNaN(Number(interestRate))) {
+    if (value === "" || !isNaN(Number(value))) {
       setInterestRateError(null)
     }
 
@@ -130,7 +130,7 @@ export function InvestmentCalculator({
   const handleLengthOfInvestmentInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
 
-    if (lengthOfInvestment === "" || !isNaN(Number(lengthOfInvestment))) {
+    if (value === "" || !isNaN(Number(value))) {
       setLengthOfInvestmentError(null)
     }
 
@@ -146,7 +146,7 @@ export function InvestmentCalculator({
   const handleAnnuityPaymentInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value
 
-    if (annuityPayment === "" || !isNaN(Number(annuityPayment))) {
+    if (value === "" || !isNaN(Number(value.replace(/,/g, "")))) {
       setAnnuityPaymentError(null)
     }
 
@@ -154,16 +154,16 @@ export function InvestmentCalculator({
   }
 
   const handleAnnuityPaymentInputBlur = () => {
-    if (annuityPayment !== "" && isNaN(Number(annuityPayment))) {
+    if (annuityPayment !== "" && isNaN(Number(annuityPayment.replace(/,/g, "")))) {
       setAnnuityPaymentError("Initial principal must be a valid number.")
     }
   }
 
   const formValid = (
-    initialPrincipal !== "" && !isNaN(Number(initialPrincipal))
+    initialPrincipal !== "" && !isNaN(Number(initialPrincipal.replace(/,/g, "")))
     && interestRate !== "" && !isNaN(Number(interestRate))
     && lengthOfInvestment !== "" && !isNaN(Number(lengthOfInvestment))
-    && annuityPayment === "" || !isNaN(Number(annuityPayment))
+    && annuityPayment === "" || !isNaN(Number(annuityPayment.replace(/,/g, "")))
   )
 
   const handleInvestmentChange = () => {
@@ -171,10 +171,10 @@ export function InvestmentCalculator({
       return
     }
 
-    const principal = Number(initialPrincipal)
+    const principal = Number(initialPrincipal.replace(/,/g, ""))
     const nominalRate = Number(interestRate) / 100
     const time = Number(lengthOfInvestment)
-    const recurringPayment = Number(annuityPayment)
+    const recurringPayment = Number(annuityPayment.replace(/,/g, ""))
 
     const effectiveRate = getEffectiveRate({
       nominalRate,
