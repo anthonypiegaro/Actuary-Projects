@@ -149,7 +149,7 @@ export function NavBar() {
           className="cursor-pointer text-foreground/80 dark:text-foreground relative flex items-center justify-center transition-all duration-300 rounded-md hover:bg-accent/50 hover:text-accent-foreground dark:hover:bg-accent/50 p-1"
           asChild
         >
-          <a href="https://github.com/anthonypiegaro" target="_blank">
+          <a href="https://github.com/anthonypiegaro/Actuary-Projects" target="_blank">
             <LuGithub className="size-7" />
           </a>
         </Button>

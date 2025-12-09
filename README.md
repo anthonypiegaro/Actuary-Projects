@@ -9,7 +9,7 @@ A suite of actuarial and financial modeling tools designed for precision, clarit
 - [ ] **Loan Calculator**  
   Compute loan payments and amortization schedules with adjustable rates and terms.
 
-- [ ] **Investment Calculator**  
+- [x] **Investment Calculator**  
   Model future value of savings under varying compounding and inflation scenarios.
 
 - [ ] **Annuity Calculator**  
