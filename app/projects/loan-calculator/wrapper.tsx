@@ -4,6 +4,7 @@ import { useState } from "react"
 
 import { LoanCalculator } from "./loan-calculator"
 import { LoanSchedule } from "./loan-schedule"
+import { ScrollToTopButton } from "./scroll-to-top-button"
 
 import { AmortizationSchedule } from "./types"
 
@@ -14,6 +15,7 @@ export function Wrapper() {
     <div className="pb-20">
       <LoanCalculator onLoanChange={setAmortizationSchedule} />
       <LoanSchedule amortizationSchedule={amortizationSchedule}/>
+      <ScrollToTopButton />
     </div>
   )
 }

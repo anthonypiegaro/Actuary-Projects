@@ -6,7 +6,7 @@ A suite of actuarial and financial modeling tools designed for precision, clarit
 
 ## ✅ Project Checklist
 
-- [ ] **Loan Calculator**  
+- [x] **Loan Calculator**  
   Compute loan payments and amortization schedules with adjustable rates and terms.
 
 - [x] **Investment Calculator**  
