@@ -16,18 +16,14 @@ import {
   ChartTooltipContent
 } from "@/components/ui/chart"
 
-import { Investment } from "./types"
+import { ChartData } from "./types"
+
 
 export function InvestmentAreaChart({
-  investment
+  chartData
 }: {
-  investment: Investment
+  chartData: ChartData
 }) {
-  const chartData = investment.map(period => ({
-    ...period,
-    amount: period.principal + period.interest
-  }))
-
   const chartConfig = {
     amount: {
       label: "Amount",
@@ -45,8 +41,8 @@ export function InvestmentAreaChart({
   return (
     <>
       <div className="my-4 w-full flex flex-wrap justify-center gap-4">
-        <QuickStat label={"Principal"} value={investment[investment.length - 1].principal} />
-        <QuickStat label={"Interest"} value={investment[investment.length - 1].interest} />
+        <QuickStat label={"Principal"} value={chartData[chartData.length - 1].principal} />
+        <QuickStat label={"Interest"} value={chartData[chartData.length - 1].interest} />
         <QuickStat label={"Total"} value={chartData[chartData.length - 1].amount} />
       </div>
       <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
@@ -86,7 +82,7 @@ function QuickStat({
   label: string
 }) {
   return (
-    <div className="bg-accent rounded-lg min-w-35 p-4">
+    <div className="bg-accent rounded-lg min-w-35 p-4 transition">
       <div className="text-2xl font-medium leading-none">
         ${value.toLocaleString()}
       </div>

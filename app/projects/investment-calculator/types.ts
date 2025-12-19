@@ -1,8 +1,19 @@
 export type InvestmentPeriod = { 
   year: number
+  nominalPrincipal: number
+  nominalInterest: number
+  realPrincipal: number
+  realInterest: number
+}
+
+export type ChartDataEntry = {
+  year: number
   principal: number
   interest: number
+  amount: number
 }
+
+export type ChartData = ChartDataEntry[]
 
 export type Investment = InvestmentPeriod[]
 

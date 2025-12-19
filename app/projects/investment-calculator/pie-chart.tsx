@@ -16,19 +16,19 @@ import {
 } from "@/components/ui/chart"
 import { cn } from "@/lib/utils"
 
-import { Investment } from "./types"
-
 export function InvestmentPieChart({
-  investment
+  principal,
+  interest
 }: {
-  investment: Investment
+  principal: number
+  interest: number
 }) {
   const chartData = [
-    { type: "Principal", value: investment[investment.length - 1].principal, fill: "url(#fillPrincipal)" },
-    { type: "Interest", value: investment[investment.length - 1].interest, fill: "url(#fillInterest)" },
+    { type: "Principal", value: principal, fill: "url(#fillPrincipal)" },
+    { type: "Interest", value: interest, fill: "url(#fillInterest)" },
   ]
 
-  const amount = investment[investment.length - 1].principal + investment[investment.length - 1].interest
+  const amount = principal + interest
 
   const chartConfig = {
     interest: {
@@ -104,8 +104,8 @@ export function InvestmentPieChart({
         </PieChart>
       </ChartContainer>
       <div className="flex justify-center gap-6 flex-wrap">
-        <SmallLegendItem color="var(--chart-1)" name="Principal" value={investment[investment.length - 1].principal} />
-        <SmallLegendItem color="var(--chart-2)" name="Interest" value={investment[investment.length - 1].interest} />
+        <SmallLegendItem color="var(--chart-1)" name="Principal" value={principal} />
+        <SmallLegendItem color="var(--chart-2)" name="Interest" value={interest} />
       </div>
     </>
   )

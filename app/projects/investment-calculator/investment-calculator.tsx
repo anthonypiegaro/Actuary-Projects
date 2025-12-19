@@ -92,7 +92,8 @@ export function InvestmentCalculator({
   const [annuityPaymentError, setAnnuityPaymentError] = useState<null | string>(null)
   const [annuityTiming, setAnnuityTiming] = useState<AnnuityTiming>("immediate")
   const [annuityFrequency, setAnnuityFrequency] = useState<AnnuityFrequency>("annual")
-  // add inflation
+  const [inflationRate, setInflationRate] = useState<string>("2.00")
+  const [inflationRateError, setInflationRateError] = useState<null | string>(null)
   // add real vs nominal growth
 
   const handleInitialPrincipalInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -124,6 +125,22 @@ export function InvestmentCalculator({
   const handleInterestRateInputBlur = () => {
     if (interestRate !== "" && isNaN(Number(interestRate))) {
       setInterestRateError("Interest rate must be a valid number.")
+    }
+  }
+
+  const handleInflationRateInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value
+
+    if (value === "" || !isNaN(Number(value))) {
+      setInflationRateError(null)
+    }
+
+    setInflationRate(value)
+  }
+
+  const handleInflationRateInputBlur = () => {
+    if (inflationRate !== "" && isNaN(Number(inflationRate))) {
+      setInflationRateError("Inflation rate must be a valid number.")
     }
   }
 
@@ -162,6 +179,7 @@ export function InvestmentCalculator({
   const formValid = (
     initialPrincipal !== "" && !isNaN(Number(initialPrincipal.replace(/,/g, "")))
     && interestRate !== "" && !isNaN(Number(interestRate))
+    && inflationRate !== "" && !isNaN(Number(interestRate))
     && lengthOfInvestment !== "" && !isNaN(Number(lengthOfInvestment))
     && annuityPayment === "" || !isNaN(Number(annuityPayment.replace(/,/g, "")))
   )
@@ -173,6 +191,7 @@ export function InvestmentCalculator({
 
     const principal = Number(initialPrincipal.replace(/,/g, ""))
     const nominalRate = Number(interestRate) / 100
+    const inflationR = Number(inflationRate) / 100
     const time = Number(lengthOfInvestment)
     const recurringPayment = Number(annuityPayment.replace(/,/g, ""))
 
@@ -181,27 +200,51 @@ export function InvestmentCalculator({
       frequency: compoundingFrequency
     })
 
-    const investment: Investment = [{ year: 0, principal: principal, interest: 0 }]
-    const { principal: annuityPrincipal, interest: annuityInterest } = getAnnuityPrincipalAndInterest({
+    const realRate = (effectiveRate - inflationR) / (1 + inflationR)
+
+    const investment: Investment = [{ 
+      year: 0, 
+      nominalPrincipal: principal, 
+      nominalInterest: 0,
+      realPrincipal: principal,
+      realInterest: 0
+    }]
+    const { principal: nominalAnnuityPrincipal, interest: nominalAnnuityInterest } = getAnnuityPrincipalAndInterest({
       payment: recurringPayment,
       frequency: annuityFrequency,
       timing: annuityTiming,
       effectiveRate
     })
-    let accumulatedPrincipal = principal
-    let accumulatedInterest = 0
-    let accumulatedAmount = principal
+    const { principal: realAnnuityPrincipal, interest: realAnnuityInterest } = getAnnuityPrincipalAndInterest({
+      payment: recurringPayment,
+      frequency: annuityFrequency,
+      timing: annuityTiming,
+      effectiveRate: realRate
+    })
+    let accumulatedNominalPrincipal = principal
+    let accumulatedNominalInterest = 0
+    let accumulatedNominalAmount = principal
+    let accumulatedRealPrincipal = principal
+    let accumulatedRealInterest = 0
+    let accumulatedRealAmount = principal
 
     for (let i = 1; i <= time; i++) {
-      accumulatedPrincipal += annuityPrincipal
-      const interest = accumulatedAmount * effectiveRate + annuityInterest
-      accumulatedInterest += interest
-      accumulatedAmount += interest + annuityPrincipal
+      accumulatedNominalPrincipal += nominalAnnuityPrincipal
+      const nominalInterest = accumulatedNominalAmount * effectiveRate + nominalAnnuityInterest
+      accumulatedNominalInterest += nominalInterest
+      accumulatedNominalAmount += nominalInterest + nominalAnnuityPrincipal
+
+      accumulatedRealPrincipal += realAnnuityPrincipal
+      const realInterest = accumulatedRealAmount * realRate + realAnnuityInterest
+      accumulatedRealInterest += realInterest
+      accumulatedRealAmount += realInterest + realAnnuityPrincipal
 
       investment.push({
         year: i,
-        principal: Number(accumulatedPrincipal.toFixed(2)),
-        interest: Number(accumulatedInterest.toFixed(2))
+        nominalPrincipal: Number(accumulatedNominalPrincipal.toFixed(2)),
+        nominalInterest: Number(accumulatedNominalInterest.toFixed(2)),
+        realPrincipal: Number(accumulatedRealPrincipal.toFixed(2)),
+        realInterest: Number(accumulatedRealInterest.toFixed(2))
       })
     }
 
@@ -250,12 +293,13 @@ export function InvestmentCalculator({
                   <div className="space-y-1">
                     <h4 className="text-sm font-medium">Interest Rate</h4>
                     <p className="text-sm text-muted-foreground">
-                      The interest rate represents the percentage of return earned (or paid) on an investment or loan over a specific period
+                      The interest rate represents the percentage of return earned (or paid) on an investment or loan over a specific period.
                     </p>
                   </div>
                 </HoverCardContent>
               </HoverCard>
             </Label>
+            {interestRateError && <p className="text-sm text-destructive">{interestRateError}</p>}
             <InputGroup className="max-w-sm">
               <InputGroupAddon>
                 <InputGroupText>%</InputGroupText>
@@ -301,6 +345,45 @@ export function InvestmentCalculator({
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
+              </InputGroupAddon>
+            </InputGroup>
+          </div>
+          <div className="flex flex-col gap-y-2">
+            <Label>
+              Inflation Rate
+              <HoverCard openDelay={100} closeDelay={150}>
+                <HoverCardTrigger>
+                  <InfoIcon className="h-3.5 w-3.5" />
+                </HoverCardTrigger>
+                <HoverCardContent
+                  side="right"
+                  align="start"
+                  className="w-64"
+                >
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-medium">Inflation Rate</h4>
+                    <p className="text-sm text-muted-foreground">
+                      The inflation rate represents how the purchasing power of money
+                      decreases over time.
+                    </p>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+            </Label>
+            {inflationRateError && <p className="text-sm text-destructive">{inflationRateError}</p>}
+            <InputGroup className="max-w-sm">
+              <InputGroupAddon>
+                <InputGroupText>%</InputGroupText>
+              </InputGroupAddon>
+              <InputGroupInput
+                aria-invalid={inflationRateError ? true : false}
+                placeholder="0.0" 
+                value={inflationRate} 
+                onChange={handleInflationRateInputChange}
+                onBlur={handleInflationRateInputBlur}
+              />
+              <InputGroupAddon align="inline-end">
+                <InputGroupText>years</InputGroupText>
               </InputGroupAddon>
             </InputGroup>
           </div>
