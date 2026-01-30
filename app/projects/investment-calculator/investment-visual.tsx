@@ -46,7 +46,7 @@ export function InvestmentVisual({
 
   return (
     <Card className="relative max-w-4xl mx-auto mt-10 px-1 lg:px-4 xl:px-8 max-sm:bg-transparent max-sm:border-transparent">
-      <div className="absolute top-6 right-6 flex items-center space-x-2">
+      <div className="sm:absolute sm:top-6 sm:right-6 max-sm:mx-auto flex items-center space-x-2">
         <Switch id="real-rate" onCheckedChange={checked => setShowRealRate(checked)} />
         <Label htmlFor="real-rate">Real Rate</Label>
         <HoverCard openDelay={100} closeDelay={150}>
